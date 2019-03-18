@@ -1,0 +1,7 @@
+[package]
+name = "slpj"
+version = "0.1.0"
+authors = ["Lenard Pratt <l3np27@gmail.com>"]
+edition = "2018"
+
+[dependencies]
