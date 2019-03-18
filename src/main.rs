@@ -28,29 +28,38 @@ fn compile_patterns(occurrences: &mut Vec<()>, matrix: &mut PatternMatrix) -> De
         DecisionTree::Leaf(matrix.get(0).action())
     } else {
         let cols_no_wcard = matrix.cols_with_wcard(); //All columns that have no wildcard pattern;
+
+
         let mut case_list = Vec::new();
+        let mut head_cons = HashSet::new();
 
-        for column in cols_no_wcard.iter() {
-            let head_cons = matrix.head_cons(*column);
 
-//            if column > &1 {
-//                //                println!("a");
-//                //                matrix.swap(*column);
-//                return DecisionTree::Swap(
-//                    *column,
-//                    Box::new(compile_patterns(occurrences, matrix)),
-//                );
-//            } else {
+
+
+
+
+        for i in cols_no_wcard.iter() {
+            if i == &1 {
+                let head_cons = matrix.head_cons(*i);
 
                 for con in head_cons {
                     let mut matrice = matrix.specialization(&con);
                     println!("{}",matrice);
 
+                    println!("{:?}",matrix.cols_with_wcard());
                     case_list.push((con, compile_patterns(occurrences,&mut matrice)));
                 }
+            } else if i > &1 {
+                matrix.swap(*i);
+                return DecisionTree::Swap(
+                    *i,
+                    Box::new(compile_patterns(occurrences, matrix)),
+                );
+            }
 
 
-//            }
+
+
         }
 
         DecisionTree::Switch(

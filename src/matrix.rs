@@ -113,41 +113,46 @@ impl PatternMatrix {
 
     pub fn swap(&mut self, index: usize) {
         for i in 0..self.columns.len() {
-            //
-            //           unsafe {
-            //               // swap
-            //               // Can't take two mutable loans from one vector, so instead just cast
-            //               // them to their raw pointers to do the swap
-            //               let x = &mut self.columns[i].0[index];
-            //               let y = &mut self.columns[i].0[1];
-            //
-            //               std::mem::swap(x,y);
-            //           }
+
+                       unsafe {
+                           // swap
+                           // Can't take two mutable loans from one vector, so instead just cast
+                           // them to their raw pointers to do the swap
+                           let x:*mut Pattern = &mut self.columns[i].0[index];
+                           let y:*mut Pattern = &mut self.columns[i].0[1];
+
+                           std::ptr::swap(x,y);
+                       }
         }
     }
 
+    /// All columns that have no wildcard pattern;
     pub fn cols_with_wcard(&self) -> Vec<usize> {
-        let mut columns = HashSet::new();
 
-        for (i, row) in self.columns.iter().enumerate() {
+        let mut coords = Vec::new();
+
+        for (i, row) in self.columns.iter().rev().enumerate() {
+
+
             let mut not_wcard = false;
 
-            match &self.columns[i].0[i] {
-                Pattern::WildCard => (),
-                _ => not_wcard = true,
-            }
 
-            if not_wcard {
-                columns.insert(i);
-            }
-
-            for j in 0..self.columns.len() {
-                println!("[{}][{}]",i,j);
-
+            for (j,pat) in row.0.iter().enumerate() {
+                match pat {
+                    Pattern::WildCard => (),
+                    _ => coords.push(j*i)
+                }
             }
         }
 
-        columns.into_iter().collect()
+
+        let mut coords = coords.into_iter().collect::<HashSet<_>>();
+
+        let mut coords = coords.into_iter().collect::<Vec<_>>();
+
+        coords.sort();
+
+        coords
     }
 
     pub fn head_cons(&self, index: usize) -> HashSet<Constructor> {
