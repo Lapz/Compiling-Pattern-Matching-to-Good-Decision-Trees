@@ -1,5 +1,5 @@
 use std::fmt::{self, Display};
-
+use std::marker::PhantomData;
 /// A pattern Constructor
 /// i.e given enum RGB {
 ///     Red,
@@ -64,7 +64,7 @@ fn wcard() -> Pattern {
     Pattern::WildCard
 }
 
-#[derive(Debug,PartialEq)]
+#[derive(Debug, PartialEq)]
 struct Row(Vec<Pattern>);
 
 impl Row {
@@ -129,19 +129,16 @@ impl Row {
     }
 }
 
-#[derive(Debug,PartialEq)]
-struct PatternMatrix {
+#[derive(Debug, PartialEq)]
+struct PatternMatrix<'a> {
     columns: Vec<Row>,
+    phantom:PhantomData<&'a ()>
 }
 
 
-pub struct PatternMatrice<'a> {
-    columns:Vec<&'a Pattern>
-}
-
-impl PatternMatrix {
+impl <'a> PatternMatrix<'a> {
     pub fn new() -> Self {
-        Self { columns: vec![] }
+        Self { columns: vec![],phantom:PhantomData }
     }
 
     pub fn add_row(&mut self, row: Row) {
@@ -153,30 +150,31 @@ impl PatternMatrix {
     }
 
     /// Specialization by constructor `c` simplifies matrix `P` under the assumption  that `v1` admits `c` as  a  head  constructor
-    pub fn specialization(&mut self, con: &Constructor) {
-        let mut old_rows = Vec::new();
+    pub fn specialization(&mut self, con: &Constructor) -> PatternMatrix {
 
-        std::mem::swap(&mut old_rows, &mut self.columns); // swap the two so we can destructure the old row and build a new one
 
-        for mut row in old_rows.into_iter() {
-            // for
-            let mut new_row = Row::new(vec![]);
+        let mut matrice = PatternMatrix::new();
+
+//        std::mem::swap(&mut old_rows, &mut self.columns); // swap the two so we can destructure the old row and build a new one
+
+        for row in self.columns.iter() {
+            let mut new_row = Row::new(Vec::new());
 
             if row.head_is(&con) {
                 // check if the head is a constructor
                 // if so remove the pattern from the matrix
-                let head = row.0.remove(0);
+                let head = &row.0[0];
 
                 // add into the matrix the subterms of the constructor
 
                 match head {
                     Pattern::Con(_, args) => {
-                        args.into_iter().for_each(|arg| new_row.add(arg));
+                        args.iter().cloned().for_each(|arg| new_row.add(arg));
                     }
                     _ => unreachable!(),
                 }
 
-                for pattern in row.0.into_iter() {
+                for pattern in row.0.iter().cloned().skip(1) {
                     new_row.add(pattern);
                 } // add the other patterns from the row that where present before
             } else if row.head_is_wcard() {
@@ -184,19 +182,19 @@ impl PatternMatrix {
                     new_row.add(Pattern::WildCard);
                 } // for the number of columns with this row add a wild card patter
 
-                for pattern in row.0.into_iter().skip(1) {
+                for pattern in row.0.iter().cloned().skip(1) {
                     // skip the head
                     new_row.add(pattern)
                 } // add the other patterns from the row that where present before
             } else if row.head_is_or() {
-                let head = row.0.remove(0); // remove the `or` pattern from the matrix
-                                            //TODO remove code duplication
+                let head = &row.0[0]; // remove the `or` pattern from the matrix
+                                      //TODO remove code duplication
                 match head {
                     Pattern::Or(lhs, rhs) => {
                         // first create a matrix which the lhs pattern along with other patterns from this row
                         let mut lhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*lhs]);
+                        let mut new_row = Row::new(vec![*lhs.clone()]);
 
                         for pat in row.0.iter() {
                             new_row.add(pat.clone());
@@ -208,18 +206,18 @@ impl PatternMatrix {
 
                         let mut rhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*rhs]);
+                        let mut new_row = Row::new(vec![*rhs.clone()]);
 
-                        for pat in row.0 {
-                            new_row.add(pat.clone());
+                        for pat in row.0.iter().cloned() {
+                            new_row.add(pat);
                         }
 
                         rhs_matrix.add_row(new_row);
-                        rhs_matrix.specialization(con); //apply the lhs aswell
+                        //apply the lhs aswell
 
                         // add the two matrices to the current one
-                        self.concat(lhs_matrix);
-                        self.concat(rhs_matrix);
+                        matrice.concat(lhs_matrix.specialization(con));
+                        matrice.concat(rhs_matrix.specialization(con));
                     }
 
                     _ => unreachable!(),
@@ -229,38 +227,38 @@ impl PatternMatrix {
             if new_row.is_empty() {
                 continue;
             } else {
-                self.columns.push(new_row);
+                matrice.add_row(new_row);
             }
         }
+
+        matrice
     }
 
     /// The default matrix retains the rows of `P` whose first pattern `p^j1` admits all
     /// values `c′(v1, . . . , va)` as instances,where constructor `c′` is not present in
     /// the first column of `P`
-    pub fn default(&mut self) {
-        let mut old_rows = Vec::new();
+    pub fn default(&mut self)  -> PatternMatrix {
+        let mut matrice = PatternMatrix::new();
 
-        std::mem::swap(&mut old_rows, &mut self.columns); // swap the two so we can destructure the old row and build a new one
-
-        for mut row in old_rows.into_iter() {
+        for mut row in self.columns.iter() {
             let mut new_row = Row::new(vec![]);
 
             if row.head_is_con() {
                 continue;
             } else if row.head_is_wcard() {
-                for pattern in row.0.into_iter().skip(1) {
+                for pattern in row.0.iter().cloned().skip(1) {
                     // skip the head
                     new_row.add(pattern)
                 }
             } else {
-                let head = row.0.remove(0);
+                let head = &row.0[0];
 
                 match head {
                     Pattern::Or(lhs, rhs) => {
                         // first create a matrix which the lhs pattern along with other patterns from this row
                         let mut lhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*lhs]);
+                        let mut new_row = Row::new(vec![*lhs.clone()]);
 
                         for pat in row.0.iter() {
                             new_row.add(pat.clone());
@@ -272,26 +270,28 @@ impl PatternMatrix {
 
                         let mut rhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*rhs]);
+                        let mut new_row = Row::new(vec![*rhs.clone()]);
 
-                        for pat in row.0 {
-                            new_row.add(pat.clone());
+                        for pat in row.0.iter().cloned() {
+                            new_row.add(pat);
                         }
 
                         rhs_matrix.add_row(new_row);
                         rhs_matrix.default(); //apply to the lhs as well
 
                         // add the two matrices to the current one
-                        self.concat(lhs_matrix);
-                        self.concat(rhs_matrix);
+                        matrice.concat(lhs_matrix);
+                        matrice.concat(rhs_matrix);
                     }
 
                     _ => unreachable!(),
                 }
             }
 
-            self.columns.push(new_row);
+            matrice.add_row(new_row);
         }
+
+        matrice
     }
 }
 
@@ -312,22 +312,14 @@ fn main() {
     //matrix Q -> B
     matrix.add_row(Row::new(vec![list(vec![]), wcard()]));
     matrix.add_row(Row::new(vec![wcard(), list(vec![])]));
-    matrix.add_row(Row::new(vec![
-        wcard(),
-        wcard()
-    ]));
+    matrix.add_row(Row::new(vec![wcard(), wcard()]));
 
-
-    matrix.default();
-
-
-
-    println!("{}", matrix);
+    println!("{}",matrix.default());
 
     println!("Hello, world!");
 }
 
-impl Display for PatternMatrix {
+impl <'a> Display for PatternMatrix<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for col in self.columns.iter() {
             write!(f, "(")?;
@@ -390,21 +382,18 @@ mod test {
             split(wcard(), wcard()),
         ]));
 
-
-        matrix.specialization(&Constructor {
-            name: "Split".into(),
-            arity: 2,
-            span: 1,
-        });
-
+        ;
 
         let mut expected = PatternMatrix::new();
 
-        expected.add_row(Row::new(vec![wcard(), wcard(),list(vec![])]));
-        expected.add_row(Row::new(vec![wcard(), wcard(),split(wcard(),wcard())]));
+        expected.add_row(Row::new(vec![wcard(), wcard(), list(vec![])]));
+        expected.add_row(Row::new(vec![wcard(), wcard(), split(wcard(), wcard())]));
 
-
-        assert_eq!(matrix,expected)
+        assert_eq!(matrix.specialization(&Constructor {
+            name: "Split".into(),
+            arity: 2,
+            span: 1,
+        }), expected)
     }
 
     #[test]
@@ -419,22 +408,19 @@ mod test {
             split(wcard(), wcard()),
         ]));
 
-
-        matrix.specialization(&Constructor {
-            name: "List".into(),
-            arity: 0,
-            span: 1,
-        });
-
+       ;
 
         let mut expected = PatternMatrix::new();
 
-        expected.add_row(Row::new(vec![wcard(),]));
-        expected.add_row(Row::new(vec![wcard(),wcard(),list(vec![])]));
+        expected.add_row(Row::new(vec![wcard()]));
+        expected.add_row(Row::new(vec![wcard(), wcard(), list(vec![])]));
 
-        assert_eq!(matrix,expected)
+        assert_eq!( matrix.specialization(&Constructor {
+            name: "List".into(),
+            arity: 0,
+            span: 1,
+        }), expected)
     }
-
 
     #[test]
     fn default_works() {
@@ -443,20 +429,15 @@ mod test {
         //matrix P -> A
         matrix.add_row(Row::new(vec![list(vec![]), wcard()]));
         matrix.add_row(Row::new(vec![wcard(), list(vec![])]));
-        matrix.add_row(Row::new(vec![
-            wcard(),
-            wcard()
-        ]));
-
+        matrix.add_row(Row::new(vec![wcard(), wcard()]));
 
         matrix.default();
 
-
         let mut expected = PatternMatrix::new();
 
-        expected.add_row(Row::new(vec![list(vec![]),]));
+        expected.add_row(Row::new(vec![list(vec![])]));
         expected.add_row(Row::new(vec![wcard()]));
 
-        assert_eq!(matrix,expected)
+        assert_eq!(matrix, expected)
     }
 }
