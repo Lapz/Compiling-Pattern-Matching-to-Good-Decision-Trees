@@ -1,7 +1,10 @@
-use std::fmt::{self, Display};
+use crate::decision::DecisionTree;
 use crate::matrix::{PatternMatrix, Row};
-use crate::pattern::{wcard, list};
+use crate::pattern::{list, split, wcard};
+use std::collections::HashSet;
+use std::fmt::{self, Display};
 
+mod decision;
 mod matrix;
 mod pattern;
 
@@ -16,53 +19,101 @@ mod pattern;
     ( _  ,Nil )
 */
 
+fn compile_patterns(occurrences: &mut Vec<()>, matrix: &mut PatternMatrix) -> DecisionTree {
+
+    if matrix.is_empty() {
+        return DecisionTree::Fail;
+    } else if matrix.get(0).contains_wcard_only() {
+        //check if the first row only contains wildcards
+        DecisionTree::Leaf(matrix.get(0).action())
+    } else {
+        let cols_no_wcard = matrix.cols_with_wcard(); //All columns that have no wildcard pattern;
+        let mut case_list = Vec::new();
+
+        for column in cols_no_wcard.iter() {
+            let head_cons = matrix.head_cons(*column);
+
+//            if column > &1 {
+//                //                println!("a");
+//                //                matrix.swap(*column);
+//                return DecisionTree::Swap(
+//                    *column,
+//                    Box::new(compile_patterns(occurrences, matrix)),
+//                );
+//            } else {
+
+                for con in head_cons {
+                    let mut matrice = matrix.specialization(&con);
+                    println!("{}",matrice);
+
+                    case_list.push((con, compile_patterns(occurrences,&mut matrice)));
+                }
+
+
+//            }
+        }
+
+        DecisionTree::Switch(
+            case_list,
+            Some(Box::new(compile_patterns(
+                occurrences,
+                &mut matrix.default(),
+            ))),
+        )
+    }
+}
+
 fn main() {
     let mut matrix = PatternMatrix::new();
 
-    //matrix Q -> B
-    matrix.add_row(Row::new(vec![list(vec![]), wcard()]));
-    matrix.add_row(Row::new(vec![wcard(), list(vec![])]));
-    matrix.add_row(Row::new(vec![wcard(), wcard()]));
+    //matrix P -> A
+    matrix.add_row(Row::new(vec![list(vec![]), wcard()], 1));
+    matrix.add_row(Row::new(vec![wcard(), list(vec![])], 2));
+    matrix.add_row(Row::new(
+        vec![split(wcard(), wcard()), split(wcard(), wcard())],
+        3,
+    ));;
 
-    println!("{}",matrix.default());
+    println!("{}", matrix);
+
+    println!("{:#?}", compile_patterns(&mut vec![], &mut matrix));
 
     println!("Hello, world!");
 }
-
-
-
-
 
 #[cfg(test)]
 mod test {
 
     use crate::matrix::{PatternMatrix, Row};
-    use crate::pattern::{split, wcard, list, Constructor};
+    use crate::pattern::{list, split, wcard, Constructor};
 
     #[test]
     fn specialization_on_split_works() {
         let mut matrix = PatternMatrix::new();
 
         //matrix P -> A
-        matrix.add_row(Row::new(vec![list(vec![]), wcard()]));
-        matrix.add_row(Row::new(vec![wcard(), list(vec![])]));
-        matrix.add_row(Row::new(vec![
-            split(wcard(), wcard()),
-            split(wcard(), wcard()),
-        ]));
+        matrix.add_row(Row::new(vec![list(vec![]), wcard()], 1));
+        matrix.add_row(Row::new(vec![wcard(), list(vec![])], 2));
+        matrix.add_row(Row::new(
+            vec![split(wcard(), wcard()), split(wcard(), wcard())],
+            3,
+        ));
 
         ;
 
         let mut expected = PatternMatrix::new();
 
-        expected.add_row(Row::new(vec![wcard(), wcard(), list(vec![])]));
-        expected.add_row(Row::new(vec![wcard(), wcard(), split(wcard(), wcard())]));
+        expected.add_row(Row::new(vec![wcard(), wcard(), list(vec![])], 2));
+        expected.add_row(Row::new(vec![wcard(), wcard(), split(wcard(), wcard())], 3));
 
-        assert_eq!(matrix.specialization(&Constructor {
-            name: "Split".into(),
-            arity: 2,
-            span: 1,
-        }), expected)
+        assert_eq!(
+            matrix.specialization(&Constructor {
+                name: "Split".into(),
+                arity: 2,
+                span: 1,
+            }),
+            expected
+        )
     }
 
     #[test]
@@ -70,25 +121,28 @@ mod test {
         let mut matrix = PatternMatrix::new();
 
         //matrix P -> A
-        matrix.add_row(Row::new(vec![list(vec![]), wcard()]));
-        matrix.add_row(Row::new(vec![wcard(), list(vec![])]));
-        matrix.add_row(Row::new(vec![
-            split(wcard(), wcard()),
-            split(wcard(), wcard()),
-        ]));
+        matrix.add_row(Row::new(vec![list(vec![]), wcard()], 1));
+        matrix.add_row(Row::new(vec![wcard(), list(vec![])], 2));
+        matrix.add_row(Row::new(
+            vec![split(wcard(), wcard()), split(wcard(), wcard())],
+            3,
+        ));
 
        ;
 
         let mut expected = PatternMatrix::new();
 
-        expected.add_row(Row::new(vec![wcard()]));
-        expected.add_row(Row::new(vec![wcard(), wcard(), list(vec![])]));
+        expected.add_row(Row::new(vec![wcard()], 1));
+        expected.add_row(Row::new(vec![wcard(), wcard(), list(vec![])], 2));
 
-        assert_eq!( matrix.specialization(&Constructor {
-            name: "List".into(),
-            arity: 0,
-            span: 1,
-        }), expected)
+        assert_eq!(
+            matrix.specialization(&Constructor {
+                name: "List".into(),
+                arity: 0,
+                span: 1,
+            }),
+            expected
+        )
     }
 
     #[test]
@@ -96,17 +150,15 @@ mod test {
         let mut matrix = PatternMatrix::new();
 
         //matrix P -> A
-        matrix.add_row(Row::new(vec![list(vec![]), wcard()]));
-        matrix.add_row(Row::new(vec![wcard(), list(vec![])]));
-        matrix.add_row(Row::new(vec![wcard(), wcard()]));
-
-        matrix.default();
+        matrix.add_row(Row::new(vec![list(vec![]), wcard()], 1));
+        matrix.add_row(Row::new(vec![wcard(), list(vec![])], 2));
+        matrix.add_row(Row::new(vec![wcard(), wcard()], 3));
 
         let mut expected = PatternMatrix::new();
 
-        expected.add_row(Row::new(vec![list(vec![])]));
-        expected.add_row(Row::new(vec![wcard()]));
+        expected.add_row(Row::new(vec![list(vec![])], 2));
+        expected.add_row(Row::new(vec![wcard()], 3));
 
-        assert_eq!(matrix, expected)
+        assert_eq!(matrix.default(), expected)
     }
 }

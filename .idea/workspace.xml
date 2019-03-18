@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="355e78fa-535a-4d91-8ee7-4187261d2d42" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/matrix.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pattern.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/decision.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/matrix.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pattern.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/pattern.rs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +22,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+            <state relative-caret-position="94">
+              <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -31,24 +31,39 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/matrix.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="181" column="12" selection-start-line="181" selection-start-column="12" selection-end-line="181" selection-end-column="12" />
+            <state relative-caret-position="313">
+              <caret line="140" column="32" selection-start-line="140" selection-start-column="32" selection-end-line="140" selection-end-column="32" />
               <folding>
-                <element signature="e#225#226#0" expanded="true" />
-                <element signature="e#250#251#0" expanded="true" />
-                <element signature="e#293#294#0" expanded="true" />
-                <element signature="e#325#326#0" expanded="true" />
-                <element signature="e#360#361#0" expanded="true" />
-                <element signature="e#387#388#0" expanded="true" />
-                <element signature="e#425#426#0" expanded="true" />
-                <element signature="e#457#458#0" expanded="true" />
-                <element signature="e#1491#1492#0" expanded="true" />
-                <element signature="e#1530#1531#0" expanded="true" />
-                <element signature="e#1573#1574#0" expanded="true" />
-                <element signature="e#1611#1612#0" expanded="true" />
-                <element signature="e#1666#1667#0" expanded="true" />
-                <element signature="e#1716#1717#0" expanded="true" />
+                <element signature="e#346#347#0" expanded="true" />
+                <element signature="e#380#381#0" expanded="true" />
+                <element signature="e#423#424#0" expanded="true" />
+                <element signature="e#455#456#0" expanded="true" />
+                <element signature="e#490#491#0" expanded="true" />
+                <element signature="e#517#518#0" expanded="true" />
+                <element signature="e#555#556#0" expanded="true" />
+                <element signature="e#587#588#0" expanded="true" />
+                <element signature="e#623#624#0" expanded="true" />
+                <element signature="e#644#645#0" expanded="true" />
+                <element signature="e#1951#1952#0" expanded="true" />
+                <element signature="e#1990#1991#0" expanded="true" />
+                <element signature="e#2033#2034#0" expanded="true" />
+                <element signature="e#2071#2072#0" expanded="true" />
+                <element signature="e#2118#2119#0" expanded="true" />
+                <element signature="e#2153#2154#0" expanded="true" />
+                <element signature="e#2208#2209#0" expanded="true" />
+                <element signature="e#2258#2259#0" expanded="true" />
+                <element signature="e#2296#2297#0" expanded="true" />
+                <element signature="e#2334#2335#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/decision.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -56,11 +71,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pattern.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31">
-              <caret line="63" column="4" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="4" />
+            <state relative-caret-position="190">
+              <caret line="68" column="8" selection-start-line="68" selection-start-column="8" selection-end-line="68" selection-end-column="8" />
               <folding>
-                <element signature="e#1211#1212#0" expanded="true" />
-                <element signature="e#1235#1236#0" expanded="true" />
+                <element signature="e#1253#1254#0" expanded="true" />
+                <element signature="e#1277#1278#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -88,6 +103,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/pattern.rs" />
+        <option value="$PROJECT_DIR$/src/decision.rs" />
         <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/src/matrix.rs" />
       </list>
@@ -147,7 +163,17 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Cargo Command.Test test::specialization_on_list_works">
+  <component name="RunManager" selected="Cargo Command.Run slpj">
+    <configuration name="Run slpj" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="run --package slpj --bin slpj" />
+      <option name="allFeatures" value="false" />
+      <option name="nocapture" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="Test main::test" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="channel" value="DEFAULT" />
       <option name="command" value="test --package slpj --bin slpj test" />
@@ -190,8 +216,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Cargo Command.Test test::specialization_on_list_works" />
+        <item itemvalue="Cargo Command.Run slpj" />
         <item itemvalue="Cargo Command.Test test::default_works" />
+        <item itemvalue="Cargo Command.Test test::specialization_on_list_works" />
         <item itemvalue="Cargo Command.Test main::test" />
         <item itemvalue="Cargo Command.Test test::specialization_works" />
       </list>
@@ -207,7 +234,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1552907290138</updated>
-      <workItem from="1552907293130" duration="10860000" />
+      <workItem from="1552907293130" duration="24170000" />
     </task>
     <servers />
   </component>
@@ -233,9 +260,15 @@
     <history-entry file="Test_test__specialization_on_list_works - 2019.03.18 at 14h 04m 38s.xml">
       <configuration name="Test test::specialization_on_list_works" configurationId="CargoCommandRunConfiguration" />
     </history-entry>
+    <history-entry file="Test_test__default_works - 2019.03.18 at 15h 11m 07s.xml">
+      <configuration name="Test test::default_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
+    <history-entry file="Test_test__default_works - 2019.03.18 at 15h 11m 35s.xml">
+      <configuration name="Test test::default_works" configurationId="CargoCommandRunConfiguration" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10860000" />
+    <option name="totallyTimeSpent" value="24170000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="905" y="0" width="775" height="1050" extended-state="6" />
@@ -246,7 +279,7 @@
       <window_info id="UI Designer" />
       <window_info id="Capture Tool" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2851296" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.040927693" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" />
@@ -278,41 +311,61 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/pattern.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31">
-          <caret line="63" column="4" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="4" />
+        <state relative-caret-position="190">
+          <caret line="68" column="8" selection-start-line="68" selection-start-column="8" selection-end-line="68" selection-end-column="8" />
           <folding>
-            <element signature="e#1211#1212#0" expanded="true" />
-            <element signature="e#1235#1236#0" expanded="true" />
+            <element signature="e#1253#1254#0" expanded="true" />
+            <element signature="e#1277#1278#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/foo.txt">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="32">
+          <caret line="13" column="9617" lean-forward="true" selection-end-line="18" selection-end-column="622042" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/decision.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+        <state relative-caret-position="94">
+          <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/matrix.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="181" column="12" selection-start-line="181" selection-start-column="12" selection-end-line="181" selection-end-column="12" />
+        <state relative-caret-position="313">
+          <caret line="140" column="32" selection-start-line="140" selection-start-column="32" selection-end-line="140" selection-end-column="32" />
           <folding>
-            <element signature="e#225#226#0" expanded="true" />
-            <element signature="e#250#251#0" expanded="true" />
-            <element signature="e#293#294#0" expanded="true" />
-            <element signature="e#325#326#0" expanded="true" />
-            <element signature="e#360#361#0" expanded="true" />
-            <element signature="e#387#388#0" expanded="true" />
-            <element signature="e#425#426#0" expanded="true" />
-            <element signature="e#457#458#0" expanded="true" />
-            <element signature="e#1491#1492#0" expanded="true" />
-            <element signature="e#1530#1531#0" expanded="true" />
-            <element signature="e#1573#1574#0" expanded="true" />
-            <element signature="e#1611#1612#0" expanded="true" />
-            <element signature="e#1666#1667#0" expanded="true" />
-            <element signature="e#1716#1717#0" expanded="true" />
+            <element signature="e#346#347#0" expanded="true" />
+            <element signature="e#380#381#0" expanded="true" />
+            <element signature="e#423#424#0" expanded="true" />
+            <element signature="e#455#456#0" expanded="true" />
+            <element signature="e#490#491#0" expanded="true" />
+            <element signature="e#517#518#0" expanded="true" />
+            <element signature="e#555#556#0" expanded="true" />
+            <element signature="e#587#588#0" expanded="true" />
+            <element signature="e#623#624#0" expanded="true" />
+            <element signature="e#644#645#0" expanded="true" />
+            <element signature="e#1951#1952#0" expanded="true" />
+            <element signature="e#1990#1991#0" expanded="true" />
+            <element signature="e#2033#2034#0" expanded="true" />
+            <element signature="e#2071#2072#0" expanded="true" />
+            <element signature="e#2118#2119#0" expanded="true" />
+            <element signature="e#2153#2154#0" expanded="true" />
+            <element signature="e#2208#2209#0" expanded="true" />
+            <element signature="e#2258#2259#0" expanded="true" />
+            <element signature="e#2296#2297#0" expanded="true" />
+            <element signature="e#2334#2335#0" expanded="true" />
           </folding>
         </state>
       </provider>

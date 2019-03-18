@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::fmt::{self, Display};
 
 /// A pattern Constructor
@@ -14,9 +15,9 @@ use std::fmt::{self, Display};
 /// }
 #[derive(Debug, Clone, PartialEq, Hash, Eq)]
 pub struct Constructor {
-    name: String,
-    arity: i32,
-    span: i32,
+    pub name: String,
+    pub arity: i32,
+    pub span: i32,
 }
 
 /// A pattern
@@ -27,7 +28,6 @@ pub enum Pattern {
     WildCard,
     Or(Box<Pattern>, Box<Pattern>),
 }
-
 
 pub fn nil() -> Pattern {
     Pattern::Con(
@@ -63,6 +63,25 @@ pub fn list(args: Vec<Pattern>) -> Pattern {
 
 pub fn wcard() -> Pattern {
     Pattern::WildCard
+}
+
+impl Pattern {
+    pub fn con(&self) -> HashSet<Constructor> {
+        match self {
+            Pattern::WildCard => HashSet::new(),
+            Pattern::Con(ref con, _) => {
+                let mut set = HashSet::new();
+                set.insert(con.clone());
+                set
+            }
+            Pattern::Or(ref lhs, ref rhs) => {
+                let set = lhs.con();
+                set.union(&rhs.con());
+
+                set
+            }
+        }
+    }
 }
 
 impl Display for Pattern {

@@ -1,20 +1,19 @@
+use crate::pattern::{Constructor, Pattern};
+use std::collections::HashSet;
 use std::fmt::{self, Display};
-use crate::pattern::{Pattern, Constructor};
 
+pub type Expr = usize;
 #[derive(Debug, PartialEq)]
-pub struct Row(Vec<Pattern>);
+pub struct Row(Vec<Pattern>, Expr);
 
 #[derive(Debug, PartialEq)]
 pub struct PatternMatrix {
     columns: Vec<Row>,
-
 }
 
-
-
 impl Row {
-    pub fn new(pats: Vec<Pattern>) -> Self {
-        Self(pats)
+    pub fn new(pats: Vec<Pattern>, returns: usize) -> Self {
+        Self(pats, returns)
     }
 
     pub fn add(&mut self, pat: Pattern) {
@@ -27,6 +26,23 @@ impl Row {
 
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
+    }
+
+    pub fn action(&self) -> Expr {
+        self.1
+    }
+
+    pub fn contains_wcard_only(&self) -> bool {
+        for pat in self.0.iter() {
+            match pat {
+                Pattern::WildCard => continue,
+                _ => {
+                    return false;
+                }
+            }
+        }
+
+        true
     }
 
     pub fn head_is(&self, con: &Constructor) -> bool {
@@ -74,30 +90,84 @@ impl Row {
     }
 }
 
-
 impl PatternMatrix {
     pub fn new() -> Self {
-        Self { columns: vec![],}
+        Self { columns: vec![] }
     }
 
     pub fn add_row(&mut self, row: Row) {
         self.columns.push(row);
     }
 
+    pub fn get(&self, index: usize) -> &Row {
+        &self.columns[index]
+    }
+
     pub fn concat(&mut self, matrix: PatternMatrix) {
         self.columns.extend(matrix.columns)
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.columns.is_empty()
+    }
+
+    pub fn swap(&mut self, index: usize) {
+        for i in 0..self.columns.len() {
+            //
+            //           unsafe {
+            //               // swap
+            //               // Can't take two mutable loans from one vector, so instead just cast
+            //               // them to their raw pointers to do the swap
+            //               let x = &mut self.columns[i].0[index];
+            //               let y = &mut self.columns[i].0[1];
+            //
+            //               std::mem::swap(x,y);
+            //           }
+        }
+    }
+
+    pub fn cols_with_wcard(&self) -> Vec<usize> {
+        let mut columns = HashSet::new();
+
+        for (i, row) in self.columns.iter().enumerate() {
+            let mut not_wcard = false;
+
+            match &self.columns[i].0[i] {
+                Pattern::WildCard => (),
+                _ => not_wcard = true,
+            }
+
+            if not_wcard {
+                columns.insert(i);
+            }
+
+            for j in 0..self.columns.len() {
+                println!("[{}][{}]",i,j);
+
+            }
+        }
+
+        columns.into_iter().collect()
+    }
+
+    pub fn head_cons(&self, index: usize) -> HashSet<Constructor> {
+        let mut set = HashSet::new();
+
+        for (i, col) in self.columns.iter().enumerate() {
+            set.extend(self.columns[i].0[index].con());
+        }
+
+        set
+    }
+
     /// Specialization by constructor `c` simplifies matrix `P` under the assumption  that `v1` admits `c` as  a  head  constructor
     pub fn specialization(&mut self, con: &Constructor) -> PatternMatrix {
-
-
         let mut matrice = PatternMatrix::new();
 
-//        std::mem::swap(&mut old_rows, &mut self.columns); // swap the two so we can destructure the old row and build a new one
+        //        std::mem::swap(&mut old_rows, &mut self.columns); // swap the two so we can destructure the old row and build a new one
 
         for row in self.columns.iter() {
-            let mut new_row = Row::new(Vec::new());
+            let mut new_row = Row::new(Vec::new(), row.1);
 
             if row.head_is(&con) {
                 // check if the head is a constructor
@@ -127,13 +197,13 @@ impl PatternMatrix {
                 } // add the other patterns from the row that where present before
             } else if row.head_is_or() {
                 let head = &row.0[0]; // remove the `or` pattern from the matrix
-                //TODO remove code duplication
+                                      //TODO remove code duplication
                 match head {
                     Pattern::Or(lhs, rhs) => {
                         // first create a matrix which the lhs pattern along with other patterns from this row
                         let mut lhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*lhs.clone()]);
+                        let mut new_row = Row::new(vec![*lhs.clone()], row.1);
 
                         for pat in row.0.iter() {
                             new_row.add(pat.clone());
@@ -145,7 +215,7 @@ impl PatternMatrix {
 
                         let mut rhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*rhs.clone()]);
+                        let mut new_row = Row::new(vec![*rhs.clone()], row.1);
 
                         for pat in row.0.iter().cloned() {
                             new_row.add(pat);
@@ -176,11 +246,11 @@ impl PatternMatrix {
     /// The default matrix retains the rows of `P` whose first pattern `p^j1` admits all
     /// values `c′(v1, . . . , va)` as instances,where constructor `c′` is not present in
     /// the first column of `P`
-    pub fn default(&mut self)  -> PatternMatrix {
+    pub fn default(&mut self) -> PatternMatrix {
         let mut matrice = PatternMatrix::new();
 
         for row in self.columns.iter() {
-            let mut new_row = Row::new(vec![]);
+            let mut new_row = Row::new(vec![], row.1);
 
             if row.head_is_con() {
                 continue;
@@ -197,7 +267,7 @@ impl PatternMatrix {
                         // first create a matrix which the lhs pattern along with other patterns from this row
                         let mut lhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*lhs.clone()]);
+                        let mut new_row = Row::new(vec![*lhs.clone()], row.1);
 
                         for pat in row.0.iter() {
                             new_row.add(pat.clone());
@@ -209,7 +279,7 @@ impl PatternMatrix {
 
                         let mut rhs_matrix = PatternMatrix::new();
 
-                        let mut new_row = Row::new(vec![*rhs.clone()]);
+                        let mut new_row = Row::new(vec![*rhs.clone()], row.1);
 
                         for pat in row.0.iter().cloned() {
                             new_row.add(pat);
@@ -243,6 +313,7 @@ impl Display for PatternMatrix {
                 write!(f, "{}", pat)?;
                 write!(f, "  ")?;
             }
+            write!(f, "-> {}", col.1)?;
             write!(f, ")")?;
             write!(f, "\n")?;
         }
