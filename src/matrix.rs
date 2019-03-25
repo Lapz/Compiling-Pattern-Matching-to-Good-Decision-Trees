@@ -112,54 +112,63 @@ impl PatternMatrix {
     }
 
     pub fn swap(&mut self, index: usize) {
-        for i in 0..self.columns.len() {
+        unsafe {
+            // swap
+            // Can't take two mutable loans from one vector, so instead just cast
+            // them to their raw pointers to do the swap
+//            println!("{}",self);
 
-                       unsafe {
-                           // swap
-                           // Can't take two mutable loans from one vector, so instead just cast
-                           // them to their raw pointers to do the swap
-                           let x:*mut Pattern = &mut self.columns[i].0[index];
-                           let y:*mut Pattern = &mut self.columns[i].0[1];
 
-                           std::ptr::swap(x,y);
-                       }
+            for i in 0..self.columns.len() {
+
+                for j in 0..self.columns[i].0.len() {
+                    let x: *mut Pattern =&mut self.columns[i].0[0];
+
+                    let y: *mut Pattern = &mut self.columns[i].0[index];
+                    std::ptr::swap(x, y);
+                }
+
+            }
+
         }
     }
 
-    /// All columns that have no wildcard pattern;
-    pub fn cols_with_wcard(&self) -> Vec<usize> {
+    pub fn get_signature(&self,index:usize) -> HashSet<Constructor> {
 
-        let mut coords = Vec::new();
+        let mut set = HashSet::new();
 
-        for (i, row) in self.columns.iter().rev().enumerate() {
+        for pat  in self.columns[index].0.iter() {
+            set.extend(pat.con());
+        }
 
+        set
+    }
 
-            let mut not_wcard = false;
+    /// All columns that atleast has one pattern that is not a wildcard.
+    pub fn cols_with_con(&self) -> Vec<usize> {
+        let mut coords = HashSet::new();
 
+        for (i, row) in self.columns.iter().enumerate() {
 
-            for (j,pat) in row.0.iter().enumerate() {
+            for (j, pat) in row.0.iter().enumerate() {
                 match pat {
-                    Pattern::WildCard => (),
-                    _ => coords.push(j*i)
+                    Pattern::Con(_,_) => {
+                        coords.insert(j);
+                    }
+                    _=> (),
                 }
             }
         }
 
-
-        let mut coords = coords.into_iter().collect::<HashSet<_>>();
-
-        let mut coords = coords.into_iter().collect::<Vec<_>>();
-
-        coords.sort();
-
-        coords
+        coords.into_iter().collect::<Vec<_>>()
     }
 
-    pub fn head_cons(&self, index: usize) -> HashSet<Constructor> {
+    pub fn head_cons(&self) -> HashSet<Constructor> {
         let mut set = HashSet::new();
 
-        for (i, col) in self.columns.iter().enumerate() {
-            set.extend(self.columns[i].0[index].con());
+
+        for (i ,_) in self.columns.iter().enumerate() {
+            set.extend(self.columns[i].0[0].con());
         }
 
         set

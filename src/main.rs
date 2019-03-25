@@ -3,6 +3,7 @@ use crate::matrix::{PatternMatrix, Row};
 use crate::pattern::{list, split, wcard};
 use std::collections::HashSet;
 use std::fmt::{self, Display};
+use std::hint::unreachable_unchecked;
 
 mod decision;
 mod matrix;
@@ -20,55 +21,39 @@ mod pattern;
 */
 
 fn compile_patterns(occurrences: &mut Vec<()>, matrix: &mut PatternMatrix) -> DecisionTree {
-
     if matrix.is_empty() {
         return DecisionTree::Fail;
     } else if matrix.get(0).contains_wcard_only() {
         //check if the first row only contains wildcards
         DecisionTree::Leaf(matrix.get(0).action())
     } else {
-        let cols_no_wcard = matrix.cols_with_wcard(); //All columns that have no wildcard pattern;
+        let columns = matrix.cols_with_con(); //All columns that have no wildcard pattern;
 
+        let i = columns[0];
 
-        let mut case_list = Vec::new();
-        let mut head_cons = HashSet::new();
+        if  i == 0 {
+            let head_cons = matrix.head_cons();
+            let mut default = None;
+            let mut case_list = Vec::new();
 
-
-
-
-
-
-        for i in cols_no_wcard.iter() {
-            if i == &1 {
-                let head_cons = matrix.head_cons(*i);
-
-                for con in head_cons {
-                    let mut matrice = matrix.specialization(&con);
-                    println!("{}",matrice);
-
-                    println!("{:?}",matrix.cols_with_wcard());
-                    case_list.push((con, compile_patterns(occurrences,&mut matrice)));
-                }
-            } else if i > &1 {
-                matrix.swap(*i);
-                return DecisionTree::Swap(
-                    *i,
-                    Box::new(compile_patterns(occurrences, matrix)),
-                );
+            if head_cons.is_empty() {
+                default = Some(Box::new(compile_patterns(
+                    occurrences,
+                    &mut matrix.default(),
+                )));
             }
 
+            for con in head_cons {
+                let mut matrix = matrix.specialization(&con);
 
+                case_list.push((con.clone(), compile_patterns(occurrences, &mut matrix)));
+            }
 
-
+            DecisionTree::Switch(case_list, default)
+        } else {
+            matrix.swap(i);
+            DecisionTree::Swap(i, Box::new(compile_patterns(occurrences, matrix)))
         }
-
-        DecisionTree::Switch(
-            case_list,
-            Some(Box::new(compile_patterns(
-                occurrences,
-                &mut matrix.default(),
-            ))),
-        )
     }
 }
 
@@ -85,7 +70,7 @@ fn main() {
 
     println!("{}", matrix);
 
-    println!("{:#?}", compile_patterns(&mut vec![], &mut matrix));
+    println!("{}", compile_patterns(&mut vec![], &mut matrix));
 
     println!("Hello, world!");
 }
