@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="355e78fa-535a-4d91-8ee7-4187261d2d42" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/google-java-format.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/foo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/foo.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decision.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/decision.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/matrix.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/matrix.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pattern.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/pattern.rs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,16 +15,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="199">
-              <caret line="30" selection-start-line="30" selection-end-line="30" />
+            <state relative-caret-position="268">
+              <caret line="41" column="12" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/matrix.rs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="347">
@@ -117,8 +111,8 @@
         <option value="$PROJECT_DIR$/src/pattern.rs" />
         <option value="$PROJECT_DIR$/foo.txt" />
         <option value="$PROJECT_DIR$/src/decision.rs" />
-        <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/src/matrix.rs" />
+        <option value="$PROJECT_DIR$/src/main.rs" />
       </list>
     </option>
   </component>
@@ -242,7 +236,7 @@
       <workItem from="1553118136735" duration="1301000" />
       <workItem from="1553119471436" duration="298000" />
       <workItem from="1553159684011" duration="2444000" />
-      <workItem from="1553553704007" duration="3077000" />
+      <workItem from="1553553704007" duration="3198000" />
     </task>
     <servers />
   </component>
@@ -276,7 +270,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38607000" />
+    <option name="totallyTimeSpent" value="38728000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="577" y="23" width="1103" height="981" extended-state="0" />
@@ -376,13 +370,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.rs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/foo.txt">
       <provider selected="true" editor-type-id="text-editor" />
       <provider editor-type-id="LargeFileEditor">
@@ -417,6 +404,13 @@
             <element signature="e#2296#2297#0" expanded="true" />
             <element signature="e#2334#2335#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="41" column="12" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
         </state>
       </provider>
     </entry>

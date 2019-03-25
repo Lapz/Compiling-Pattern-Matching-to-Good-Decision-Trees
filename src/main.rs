@@ -35,6 +35,9 @@ fn compile_patterns(occurrences: &mut Vec<()>, matrix: &mut PatternMatrix) -> De
             let head_cons = matrix.head_cons();
             let mut default = None;
             let mut case_list = Vec::new();
+            // from Warnings for pattern matching: `Observe that when Zeta is empty,
+            // i.e. when the first column of P is made of wildcards and of or-patterns thereof,
+            // then Zeta is not a complete signature.`
 
             if head_cons.is_empty() {
                 default = Some(Box::new(compile_patterns(
