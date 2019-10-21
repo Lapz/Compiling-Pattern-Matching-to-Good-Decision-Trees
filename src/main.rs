@@ -31,7 +31,7 @@ fn compile_patterns(occurrences: &mut Vec<()>, matrix: &mut PatternMatrix) -> De
 
         let i = columns[0];
 
-        if  i == 0 {
+        if i == 0 {
             let head_cons = matrix.head_cons();
             let mut default = None;
             let mut case_list = Vec::new();
@@ -74,8 +74,6 @@ fn main() {
     println!("{}", matrix);
 
     println!("{}", compile_patterns(&mut vec![], &mut matrix));
-
-    println!("Hello, world!");
 }
 
 #[cfg(test)]

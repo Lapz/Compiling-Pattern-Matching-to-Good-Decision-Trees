@@ -11,12 +11,17 @@ pub enum DecisionTree {
     Swap(usize, Box<DecisionTree>),
 }
 
+impl DecisionTree {
+    pub fn eval(&self) -> usize {
+        unimplemented!()
+    }
+}
 
 impl Display for DecisionTree {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             DecisionTree::Leaf(ref size) => write!(f, "Leaf({})", size),
-            DecisionTree::Fail => write!(f,"Fail"),
+            DecisionTree::Fail => write!(f, "Fail"),
             DecisionTree::Switch(ref stack, ref default) => {
                 write!(f, "Switch(")?;
 
